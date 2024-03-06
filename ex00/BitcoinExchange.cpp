@@ -32,17 +32,17 @@ void BitcoinExchange::checkFirstLine(std::string line)
     if (line != "date | value")
         throw std::runtime_error("Invalid file format");
 }
-void BitcoinExchange::checkDate(std::string date)
+int BitcoinExchange::checkDate(std::string date)
 {
     if (date.length() != 10)
     {
         std::cout << "Error: bad input => " << date << std::endl;
-        return ;
+        return 1;
     }
     if (date[4] != '-' || date[7] != '-')
     {
         std::cout << "Error: bad input => " << date << std::endl;
-        return ;
+        return 1;
     }
     for (int i = 0; i < 10; i++)
     {
@@ -51,9 +51,10 @@ void BitcoinExchange::checkDate(std::string date)
         if (date[i] < '0' || date[i] > '9')
         {
             std::cout << "Error: bad input => " << date << std::endl;
-            return ;
+            return 1;
         }
     }
+    return 0;
 }
 int BitcoinExchange::checkValue(std::string value)
 {
@@ -69,7 +70,7 @@ int BitcoinExchange::checkValue(std::string value)
     }
     if (atoi(value.c_str()) < 0)
     {
-        std::cout << "Error: not a positive number." << value << std::endl;
+        std::cout << "Error: not a positive number."<< std::endl;
         return (1);
     }
     int dot = 0;
@@ -127,8 +128,22 @@ float BitcoinExchange::getDate(std::string date)
     t_date date1;
     t_date date2;
     date1.year = std::stoi(date.substr(0, 4));
+    if (date1.year < 2011 || date1.year > 2021)
+        return -1;
     date1.month = std::stoi(date.substr(5, 2));
+    if (date1.month < 1 || date1.month > 12)
+        return -1;
     date1.day = std::stoi(date.substr(8, 2));
+    if (date1.day < 1 || date1.day > 31)
+        return -1;
+    if (date1.month == 2 && date1.day > 29 && date1.year % 4 == 0)
+        return -1;
+    if (date1.month == 2 && date1.day > 28 && date1.year % 4 != 0)
+        return -1;
+    if (date1.month <= 7 && date1.month % 2 == 0 && date1.day > 30)
+        return -1;
+    if (date1.month > 7 && date1.month % 2 != 0 && date1.day > 30)
+        return -1;
     float sum = -1;
     if (in.find(date) == in.end())
     {
@@ -163,7 +178,7 @@ void BitcoinExchange::readFile(char *filename)
     {
         size_t pos = 0;
         pos = line.find("|", pos);
-        checkDate(strtrim(line.substr(0, pos)));
+        int d = checkDate(strtrim(line.substr(0, pos)));
         if (pos == std::string::npos || pos == 0)
         {
             std::cout << "Error: bad input => " << line << std::endl;
@@ -172,7 +187,7 @@ void BitcoinExchange::readFile(char *filename)
         }
         int c = checkValue(strtrim(line.substr(pos + 1, line.length()))); // check value
         sum = getDate(strtrim(line.substr(0, pos)));
-        if (sum == -1)
+        if (sum == -1 && !d)
         {
             std::cout << "Error: bad input => " << line << std::endl;
             i++;

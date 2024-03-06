@@ -25,7 +25,7 @@ class BitcoinExchange
         void checkLine(std::string line);
         void storLine(std::string storLine, int i, size_t pos);
         void checkFirstLine(std::string line);
-        void checkDate(std::string date);
+        int checkDate(std::string date);
         int checkValue(std::string value);
         void storDate(void);
         float getDate(std::string date);
