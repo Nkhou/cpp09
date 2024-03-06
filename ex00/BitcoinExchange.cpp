@@ -55,17 +55,22 @@ void BitcoinExchange::checkDate(std::string date)
         }
     }
 }
-void BitcoinExchange::checkValue(std::string value)
+int BitcoinExchange::checkValue(std::string value)
 {
     if (value.length() == 0)
     {
         std::cout << "Error: bad input => " << value << std::endl;
-        return ;
+        return (1);
     }
     if ( value.length() >= 10)
     {
-        std::cout << "Error: too large a number. " << value << std::endl;
-        return ;
+        std::cout << "Error: too large a number. "<< std::endl;
+        return (1);
+    }
+    if (atoi(value.c_str()) < 0)
+    {
+        std::cout << "Error: not a positive number." << value << std::endl;
+        return (1);
     }
     int dot = 0;
     for (size_t i = 0; i < value.length(); i++)
@@ -78,16 +83,17 @@ void BitcoinExchange::checkValue(std::string value)
                 if (dot > 1)
                 {
                     std::cout << "Error: bad input => " << value << std::endl;
-                    return ;
+                    return (1);
                 }
                 continue;
             }
             if (value[i] == '-' && i == 0 && value.length() > 1)
                 continue;
             std::cout << "Error: bad input => " << value << std::endl;
-            return ;
+            return 1;
         }
     }
+    return 0;
 }
 std::string strtrim(std::string s)
 {
@@ -115,29 +121,28 @@ void BitcoinExchange::storDate(void)
         in[date.substr(0, pos)] = std::stof(date.substr(pos + 1, date.length()));
     }
 }
-// float BitcoinExchange::getAverage(std::string date1, std::string date2)
-// {
-//     float sum;
-//     int i;
-//     i = 0;
-//     sum = 0;
-//     for (std::map<std::string, float>::iterator it = in.begin(); it != in.end(); it++)
-//     {
-//         if (it->first >= date1 && it->first <= date2)
-//         {
-//             sum += it->second;
-//             i++;
-//         }
-//     }
-//     if (i == 0)
-//         throw std::runtime_error("No data");
-//     return sum / i;
-// }
+
 float BitcoinExchange::getDate(std::string date)
 {
+    t_date date1;
+    t_date date2;
+    date1.year = std::stoi(date.substr(0, 4));
+    date1.month = std::stoi(date.substr(5, 2));
+    date1.day = std::stoi(date.substr(8, 2));
+    float sum = -1;
     if (in.find(date) == in.end())
     {
-        
+        for (std::map<std::string, float>::iterator it = in.begin(); it != in.end(); it++)
+        {
+            date2.year = std::stoi(it->first.substr(0, 4));
+            date2.month = std::stoi(it->first.substr(5, 2));
+            date2.day = std::stoi(it->first.substr(8, 2));
+            if (date1.year < date2.year || (date1.year == date2.year && date1.month < date2.month) || (date1.year == date2.year && date1.month == date2.month && date1.day < date2.day))
+            {
+                return sum;
+            }   
+            sum = it->second;
+        }
     }
     return in[date];
 }
@@ -145,6 +150,7 @@ void BitcoinExchange::readFile(char *filename)
 {
     std::string line;
     std::string file = filename;
+    float sum;
     std::ifstream ifs(file);
     if (!ifs.is_open())
         throw std::runtime_error("File not found");
@@ -164,8 +170,19 @@ void BitcoinExchange::readFile(char *filename)
             i++;
             continue;
         }
-        checkValue(strtrim(line.substr(pos + 1, line.length())));
-        getDate(strtrim(line.substr(0, pos)));
+        int c = checkValue(strtrim(line.substr(pos + 1, line.length()))); // check value
+        sum = getDate(strtrim(line.substr(0, pos)));
+        if (sum == -1)
+        {
+            std::cout << "Error: bad input => " << line << std::endl;
+            i++;
+            continue;
+        }
+        else if (!c)
+        {
+            float sum1 = std::stof(strtrim(line.substr(pos + 1, line.length())));
+            std::cout << strtrim(line.substr(0, pos)) << " => " << strtrim(line.substr(pos + 1, line.length())) << " = " << sum * sum1 << std::endl;
+        } 
         i++;
     }
     if (in.size() == 0)

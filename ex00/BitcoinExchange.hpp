@@ -5,8 +5,15 @@
 #include <string>
 #include <exception> 
 #include <utility>      
-#include <fstream>       
+#include <fstream>
+#include <cstdlib>
 
+typedef struct s_date
+{
+    int year;
+    int month;
+    int day;
+}               t_date; 
 class BitcoinExchange
 {
     private:
@@ -19,7 +26,7 @@ class BitcoinExchange
         void storLine(std::string storLine, int i, size_t pos);
         void checkFirstLine(std::string line);
         void checkDate(std::string date);
-        void checkValue(std::string value);
+        int checkValue(std::string value);
         void storDate(void);
         float getDate(std::string date);
         float getAverage(std::string date1, std::string date2);
