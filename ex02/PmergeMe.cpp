@@ -2,20 +2,13 @@
 
 PmergeMe::PmergeMe()
 {
-    // args = {};
-    // files = {};
     output = "";
 }
 PmergeMe::PmergeMe(char* argv[], int argc)
 {
     parseArgs(argv, argc);
 }
-// PmergeMe::PmergeMe(std::vector<std::pair<unsigned int, unsigned int> > args, std::deque<std::pair<unsigned int, unsigned int> > , std::string output)
-// {
-//     this->args = args;
-//     this->files = files;
-//     this->output = output;
-// }
+
 PmergeMe::PmergeMe(const PmergeMe& pmergeMe)
 {
     args = pmergeMe.args;
@@ -102,12 +95,48 @@ void PmergeMe::sortPairs()
 void PmergeMe::sortFirstPair()
 {
     std::sort(args.begin(), args.end());
-    printargs();
+    // printargs();
+}
+void PmergeMe::bainarySearch(std::vector<unsigned int> d2)
+{
+    std::vector<unsigned int>::iterator it;
+    for (std::vector<unsigned int>::iterator it2 = d2.begin(); it2 != d2.end(); it2++)
+    {
+        it = std::lower_bound(d2.begin(), d2.end(), *it2);
+        std::cout << "hello " <<*it << std::endl;
+    }
+}
+void PmergeMe::storIndouble()
+{
+    std::vector<unsigned int> d;
+    std::vector<unsigned int> d2;
+    for (std::vector<std::pair<unsigned int, unsigned int> >::iterator it = args.begin(); it != args.end(); it++)
+    {
+        d.push_back(it->first);
+        d2.push_back(it->second);
+    }
+    if (d2.size() > 0)
+    {
+        d.push_back(d2.back());
+        d2.pop_back();
+    }
+    bainarySearch(d2);
+    // d.push_back(d2.begin());
+    for (std::vector<unsigned int>::iterator it = d.begin(); it != d.end(); it++)
+    {
+        std::cout << *it << std::endl;
+    }
+    std::cout << "----------------" << std::endl;
+    for (std::vector<unsigned int>::iterator it = d2.begin(); it != d2.end(); it++)
+    {
+        std::cout << *it << std::endl;
+    }
 }
 void PmergeMe::run(char* argv[], int argc)
 {
     parseArgs(argv, argc);
     sortPairs();
     sortFirstPair();
+    storIndouble();
     // insertSort();
 }

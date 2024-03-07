@@ -31,6 +31,8 @@ class PmergeMe {
         void run(char* argv[], int argc);
         void sortFirstPair();
         void printargs();
+        void storIndouble();
+        void bainarySearch(std::vector<unsigned int> d2);
         // bool greaterThan(unsigned int a, unsigned int b);
 };
 #endif
