@@ -10,40 +10,82 @@ RPN::~RPN()
 void RPN::calculate()
 {
    size_t pos = 0;
+   size_t pos2 = 0;
    (void)_a;
     (void)_b;
     (void)_result;
-    while ((pos = _expression.find(" " , pos)) != std::string::npos)
+    while (_expression[pos] != '\0')
     {
-        if (( _expression[pos + 1] == '+' || _expression[pos + 1] == '-' || _expression[pos + 1] == '*' || _expression[pos + 1] == '/' ))
+        if (_expression[pos] != ' ' && _expression[pos] != '+' && _expression[pos] != '-' && _expression[pos] != '*' && _expression[pos] != '/')
         {
-            if (stack.empty())
-                throw std::runtime_error("Invalid expression");
-            _b = stack.top();
-            stack.pop();
-            if (stack.empty())
+            if (_expression[pos] < '0' || _expression[pos] > '9')
+                throw std::runtime_error("Error");
+        }
+        if (_expression[pos] == ' ')
+        {
+            if (_expression[pos - 1] >= '0' && _expression[pos - 1] <= '9')
             {
-                _a = _result;
+                stack.push(std::stoi(_expression.substr(pos2, pos - pos2)));
+                pos2 = pos + 1;
             }
             else
             {
+                if (stack.size() < 2)
+                throw std::runtime_error("Invalid expression");
+                _b = stack.top();
+                stack.pop();
                 _a = stack.top();
                 stack.pop();
+                if (_expression[pos -1 ] == '+')
+                    _result = _a + _b;
+                else if (_expression[pos - 1] == '-')
+                    _result = _a - _b;
+                else if (_expression[pos -1 ] == '*')
+                {
+                    _result = _a * _b;
+                }
+                else if (_expression[pos - 1] == '/')
+                    _result = _a / _b;
+                else
+                    throw std::runtime_error("Error");
+                stack.push(_result);
+                pos2 = pos + 1;
             }
-            if (_expression[pos + 1] == '+')
-                _result = _a + _b;
-            else if (_expression[pos + 1] == '-')
-                _result = _a - _b;
-            else if (_expression[pos + 1] == '*')
-                _result = _a * _b;
-            else if (_expression[pos + 1] == '/')
-                _result = _a / _b;
-            stack.push(_result);
+        }
+        pos++;
+    }
+    if (_expression[pos - 1] != ' ')
+    {
+        if (_expression[pos - 1] >= '0' && _expression[pos - 1] <= '9')
+        {
+            stack.push(std::stoi(_expression.substr(pos2, pos - pos2)));
         }
         else
-            stack.push(std::stoi(_expression.substr(0, pos)));
-        pos++;
-        // stack.push(std::stoi(_expression.substr(0, pos)));
+        {
+            if (stack.size() < 2)
+                throw std::runtime_error("Error");
+            _b = stack.top();
+            stack.pop();
+            _a = stack.top();
+            stack.pop();
+            if (_expression[pos -1 ] == '+')
+                _result = _a + _b;
+            else if (_expression[pos - 1] == '-')
+                _result = _a - _b;
+            else if (_expression[pos -1 ] == '*')
+            {
+                _result = _a * _b;
+            }
+            else if (_expression[pos - 1] == '/')
+                _result = _a / _b;
+            else
+                throw std::runtime_error("Error");
+            stack.push(_result);
+        }
     }
-    std::cout << "Result: " << _result << std::endl;
+    if (stack.size() != 1)
+    {
+        throw std::runtime_error("Error");
+    }
+    std::cout << _result << std::endl;
 }
