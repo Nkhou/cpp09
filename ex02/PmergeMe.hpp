@@ -25,15 +25,21 @@ class PmergeMe {
         PmergeMe(std::vector<unsigned int> args, std::deque<unsigned int> files, std::string output);
         PmergeMe(const PmergeMe& pmergeMe);
         void sortPairs();
+        void sortPairsD();
         bool isSorted();
         ~PmergeMe();
         PmergeMe& operator=(const PmergeMe& pmergeMe);
         void run(char* argv[], int argc);
         void sortFirstPair();
+        void sortFirstPairD();
         void printargs();
         void storIndouble();
-        void bainarySearch(std::vector<unsigned int> d2, std::vector<unsigned int> d);
+        void storIndoubleD();
         int jacobsthal(int n);
+        void sortVector();
+        void sortDeque();
+        template <typename T>
+        void bainarySearch(T d2, T d);
         // bool greaterThan(unsigned int a, unsigned int b);
 };
 #endif
