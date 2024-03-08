@@ -17,7 +17,7 @@ int PmergeMe::jacobsthal(int n)
 }
 PmergeMe::PmergeMe()
 {
-    output = "";
+    output = -5;
 }
 PmergeMe::PmergeMe(char* argv[], int argc)
 {
@@ -34,7 +34,7 @@ PmergeMe::~PmergeMe()
 {
     args.clear();
     files.clear();
-    output.clear();
+    // output.clear();
 }
 PmergeMe& PmergeMe::operator=(const PmergeMe& pmergeMe)
 {
@@ -71,7 +71,13 @@ void PmergeMe::parseArgs(char* argv[], int argc)
     int d = 1;
     if (argc %  2 == 0)
     {
-        output = argv[1];
+        // output = argv[1];
+        checkIsString(argv[1]);
+        output = strtod(argv[1], NULL);
+        if (k > 2147483647 || k < 0)
+        {
+            throw std::invalid_argument("");
+        }
         d = 2;
     }
     for (int i = d; i < argc; i++)
@@ -88,14 +94,23 @@ void PmergeMe::parseArgs(char* argv[], int argc)
             args.push_back(std::make_pair(atoi(argv[i]), atoi(argv[i - 1])));
             i++;
         }
+        size = i - 1;
     }
+    std::cout << "Before:  ";
+    for (int i = 1 ; i < argc; i++)
+    {
+        std::cout << argv[i] << " ";
+    }
+    std::cout << std::endl;
 }
 void PmergeMe::printargs()
 {
+    std::cout<< "Before:  " << output<< " " ;
     for (std::vector<std::pair<unsigned int, unsigned int> >::iterator it = args.begin(); it != args.end(); it++)
     {
-        std::cout << it->first << " " << it->second << std::endl;
+        std::cout << it->first << " " << it->second << " ";
     }
+    std::cout << std::endl;
 }
 void PmergeMe::sortPairs()
 {
@@ -128,7 +143,7 @@ void PmergeMe::sortFirstPairD()
     // printargs();
 }
 template <typename T>
-void PmergeMe::bainarySearch(T d2, T d)
+void PmergeMe::bainarySearch(T &d2, T &d)
 {
     int javSave = 1;
     int saveForLater = 3;
@@ -159,15 +174,16 @@ void PmergeMe::bainarySearch(T d2, T d)
             break;
         }
     }
-    for (typename T::iterator it = d.begin(); it != d.end(); it++)
+    if (output != -5)
     {
-        std::cout << *it << std::endl;
+        typename T::iterator pos = std::lower_bound(d.begin(), d.end(), output);
+        d.insert(pos, output);
     }
 }
 
-void PmergeMe::storIndouble()
+void PmergeMe::storIndouble(std::vector<unsigned int> &d)
 {
-    std::vector<unsigned int> d;
+    // std::vector<unsigned int> d;
     std::vector<unsigned int> d2;
     for (std::vector<std::pair<unsigned int, unsigned int> >::iterator it = args.begin(); it != args.end(); it++)
     {
@@ -180,9 +196,9 @@ void PmergeMe::storIndouble()
     }
     bainarySearch(d2 , d);
 }
-void PmergeMe::storIndoubleD()
+void PmergeMe::storIndoubleD(std::deque<unsigned int> &d)
 {
-    std::deque<unsigned int> d;
+    // std::deque<unsigned int> d;
     std::deque<unsigned int> d2;
     for (std::deque<std::pair<unsigned int, unsigned int> >::iterator it = files.begin(); it != files.end(); it++)
     {
@@ -195,23 +211,40 @@ void PmergeMe::storIndoubleD()
     }
     bainarySearch(d2 , d);
 }
-void PmergeMe::sortVector()
+void PmergeMe::sortVector(std::vector<unsigned int> &d)
 {
+    clock_t time_req;
+    time_req = clock();
     sortPairs();
     sortFirstPair();
-    storIndouble();
-}
-void PmergeMe::sortDeque()
-{
+    storIndouble(d);
+    time_req = clock() - time_req;
+    std::cout << "Time to process a range of " << size << " elements with std::vector  :  "<< (double)time_req/CLOCKS_PER_SEC * 1000000 << " us" << std::endl;
     
+}
+void PmergeMe::sortDeque(std::deque<unsigned int> &d)
+{
+    clock_t time_req;
+    time_req = clock();
     sortPairsD();
     sortFirstPairD();
-    storIndoubleD();
+    storIndoubleD(d);
+    time_req = clock() - time_req;
+    std::cout << "Time to process a range of " << size << " elements with std::deque  :  "<< (double)time_req/CLOCKS_PER_SEC * 1000000 << " us" << std::endl;
 }
 void PmergeMe::run(char* argv[], int argc)
 {
+    std::vector<unsigned int> d;
+    std::deque<unsigned int> d1;
     parseArgs(argv, argc);
-    sortVector();
-    sortDeque();
+    // printargs();
+    sortVector(d);
+    sortDeque(d1);
+    std::cout << "After:  ";
+    for (std::vector<unsigned int>::iterator it = d.begin(); it != d.end(); it++)
+    {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
     // insertSort();
 }

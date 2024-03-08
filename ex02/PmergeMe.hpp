@@ -15,7 +15,9 @@ class PmergeMe {
     private:
         std::vector<std::pair<unsigned int, unsigned int> > args;
         std::deque<std::pair<unsigned int, unsigned int> > files;
-        std::string output;
+
+        int size;
+        int output;
         void parseArgs(char* argv[], int argc);
         void mergeFiles();
         void checkIsString(char *argv);
@@ -33,13 +35,13 @@ class PmergeMe {
         void sortFirstPair();
         void sortFirstPairD();
         void printargs();
-        void storIndouble();
-        void storIndoubleD();
+        void storIndouble(std::vector<unsigned int> &d);
+        void storIndoubleD(std::deque<unsigned int> &d);
         int jacobsthal(int n);
-        void sortVector();
-        void sortDeque();
+        void sortVector(std::vector<unsigned int> &d);
+        void sortDeque(std::deque<unsigned int> &d);
         template <typename T>
-        void bainarySearch(T d2, T d);
+        void bainarySearch(T &d2, T &d);
         // bool greaterThan(unsigned int a, unsigned int b);
 };
 #endif
