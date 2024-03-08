@@ -32,7 +32,8 @@ class PmergeMe {
         void sortFirstPair();
         void printargs();
         void storIndouble();
-        void bainarySearch(std::vector<unsigned int> d2);
+        void bainarySearch(std::vector<unsigned int> d2, std::vector<unsigned int> d);
+        int jacobsthal(int n);
         // bool greaterThan(unsigned int a, unsigned int b);
 };
 #endif
