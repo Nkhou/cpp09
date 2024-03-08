@@ -140,7 +140,6 @@ void PmergeMe::sortFirstPair()
 void PmergeMe::sortFirstPairD()
 {
     std::sort(files.begin(), files.end());
-    // printargs();
 }
 template <typename T>
 void PmergeMe::bainarySearch(T &d2, T &d)
@@ -180,11 +179,10 @@ void PmergeMe::bainarySearch(T &d2, T &d)
         d.insert(pos, output);
     }
 }
-
-void PmergeMe::storIndouble(std::vector<unsigned int> &d)
+template <typename T>
+void PmergeMe::storIndouble(T &d)
 {
-    // std::vector<unsigned int> d;
-    std::vector<unsigned int> d2;
+    T d2;
     for (std::vector<std::pair<unsigned int, unsigned int> >::iterator it = args.begin(); it != args.end(); it++)
     {
         if (it == args.begin())
@@ -196,21 +194,7 @@ void PmergeMe::storIndouble(std::vector<unsigned int> &d)
     }
     bainarySearch(d2 , d);
 }
-void PmergeMe::storIndoubleD(std::deque<unsigned int> &d)
-{
-    // std::deque<unsigned int> d;
-    std::deque<unsigned int> d2;
-    for (std::deque<std::pair<unsigned int, unsigned int> >::iterator it = files.begin(); it != files.end(); it++)
-    {
-        if (it == files.begin())
-        {
-            d.push_back(it->second);
-        }
-        d.push_back(it->first);
-        d2.push_back(it->second);
-    }
-    bainarySearch(d2 , d);
-}
+
 void PmergeMe::sortVector(std::vector<unsigned int> &d)
 {
     clock_t time_req;
@@ -228,7 +212,7 @@ void PmergeMe::sortDeque(std::deque<unsigned int> &d)
     time_req = clock();
     sortPairsD();
     sortFirstPairD();
-    storIndoubleD(d);
+    storIndouble(d);
     time_req = clock() - time_req;
     std::cout << "Time to process a range of " << size << " elements with std::deque  :  "<< (double)time_req/CLOCKS_PER_SEC * 1000000 << " us" << std::endl;
 }
@@ -237,7 +221,6 @@ void PmergeMe::run(char* argv[], int argc)
     std::vector<unsigned int> d;
     std::deque<unsigned int> d1;
     parseArgs(argv, argc);
-    // printargs();
     sortVector(d);
     sortDeque(d1);
     std::cout << "After:  ";
@@ -246,5 +229,4 @@ void PmergeMe::run(char* argv[], int argc)
         std::cout << *it << " ";
     }
     std::cout << std::endl;
-    // insertSort();
 }

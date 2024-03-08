@@ -35,11 +35,12 @@ class PmergeMe {
         void sortFirstPair();
         void sortFirstPairD();
         void printargs();
-        void storIndouble(std::vector<unsigned int> &d);
         void storIndoubleD(std::deque<unsigned int> &d);
         int jacobsthal(int n);
         void sortVector(std::vector<unsigned int> &d);
         void sortDeque(std::deque<unsigned int> &d);
+        template <typename T>
+        void storIndouble(T &d);
         template <typename T>
         void bainarySearch(T &d2, T &d);
         // bool greaterThan(unsigned int a, unsigned int b);
