@@ -114,27 +114,37 @@ void PmergeMe::sortFirstPair()
 }
 void PmergeMe::bainarySearch(std::vector<unsigned int> d2, std::vector<unsigned int> d)
 {
-    (void)d2;
-    int jab_index = 3;
-    int javSave = 0;
+    int javSave = 1;
+    int saveForLater = 3;
+    int jab_inv;
+    int ex = 0;
     int m = d2.size();
     while (1)
     {
-        int jab_inv = jacobsthal(jab_index);
-        while (jab_inv > jab_index)
+        if (javSave == 1)
+            jab_inv = jacobsthal(javSave + 2);
+        else
+            jab_inv = jacobsthal(javSave);
+        if (jab_inv >= m)
         {
-            std::vector<unsigned int>::iterator pos = std::lower_bound(d.begin(), d.end(), d2[jab_inv - m - 1]);
-            std::cout << "pos: " << d2[jab_inv - m - 1] << std::endl;
-            d.insert(pos, d2[jab_inv - m - 1]);
+            jab_inv = m;
+            ex = 1;
+        }
+
+        saveForLater = jab_inv; // 3
+        std::cout << "jab_inv: " << jab_inv << std::endl;
+       
+        while (jab_inv > javSave)
+        {
+            std::vector<unsigned int>::iterator pos = std::lower_bound(d.begin(), d.end(), d2[jab_inv - 1]);
+            d.insert(pos, d2[jab_inv - 1]);
             jab_inv--;
         }
-        if (jab_index > m)
+        javSave = saveForLater + 1;
+        if (ex == 1)
         {
-            jab_index = m;
             break;
         }
-        javSave = jab_index;
-        jab_index++;
     }
     for (std::vector<unsigned int>::iterator it = d.begin(); it != d.end(); it++)
     {
