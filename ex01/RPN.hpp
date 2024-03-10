@@ -16,6 +16,7 @@ class RPN
         RPN();
         RPN(const RPN& rpn);
         RPN& operator=(const RPN& rpn);
+        void checkExpression();
         ~RPN();
         void calculate();
 };
