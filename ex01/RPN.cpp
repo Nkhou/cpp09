@@ -3,7 +3,29 @@
 RPN::RPN(std::string expression) : _expression(expression)
 {
 }
-
+RPN::RPN()
+{
+}
+RPN::RPN(const RPN& rpn)
+{
+    _expression = rpn._expression;
+    stack = rpn.stack;
+    _a = rpn._a;
+    _b = rpn._b;
+    _result = rpn._result;
+}
+RPN& RPN::operator=(const RPN& rpn)
+{
+    if (this != &rpn)
+    {
+        _expression = rpn._expression;
+        stack = rpn.stack;
+        _a = rpn._a;
+        _b = rpn._b;
+        _result = rpn._result;
+    }
+    return *this;
+}
 RPN::~RPN()
 {
 }

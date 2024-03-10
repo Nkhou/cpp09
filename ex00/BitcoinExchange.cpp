@@ -7,22 +7,19 @@ BitcoinExchange::BitcoinExchange()
 BitcoinExchange::~BitcoinExchange()
 {
 }
-// void BitcoinExchange::checkLine(std::string line)
-// {
-    
-// }
-// void BitcoinExchange::storLine(std::string storLine, int i, size_t pos)
-// {
-//     // size_t pos = 0;
-//     // pos = storLine.find("|", pos);
-//     // in.insert(std::pair<unsigned int, double>(i, std::stod(storLine.substr(pos + 1, storLine.length()))));
-//     if (pos == std::string::npos || pos == 0)
-//     {
-//         in[i] = std::stof(storLine);
-//         return;
-//     }
-//     in[i] = std::stof(storLine.substr(pos + 1, storLine.length()));
-// }
+BitcoinExchange::BitcoinExchange(BitcoinExchange const &src)
+{
+    in = src.in;
+}
+BitcoinExchange &BitcoinExchange::operator=(BitcoinExchange const &src)
+{
+    if (this != &src)
+    {
+        in = src.in;
+    }
+    return *this;
+}
+
 const char* BitcoinExchange::EmptyFile::what() const throw()
 {
     return "Empty file";

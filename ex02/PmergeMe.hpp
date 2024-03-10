@@ -43,6 +43,5 @@ class PmergeMe {
         void storIndouble(T &d);
         template <typename T>
         void bainarySearch(T &d2, T &d);
-        // bool greaterThan(unsigned int a, unsigned int b);
 };
 #endif

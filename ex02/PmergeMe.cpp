@@ -71,7 +71,6 @@ void PmergeMe::parseArgs(char* argv[], int argc)
     int d = 1;
     if (argc %  2 == 0)
     {
-        // output = argv[1];
         checkIsString(argv[1]);
         output = strtod(argv[1], NULL);
         if (k > 2147483647 || k < 0)
@@ -95,6 +94,10 @@ void PmergeMe::parseArgs(char* argv[], int argc)
             i++;
         }
         size = i - 1;
+    }
+    if (size == 0)
+    {
+        throw std::invalid_argument("");
     }
     std::cout << "Before:  ";
     for (int i = 1 ; i < argc; i++)

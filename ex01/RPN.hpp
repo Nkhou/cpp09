@@ -13,6 +13,9 @@ class RPN
         int _result;
     public:
         RPN(std::string expression);
+        RPN();
+        RPN(const RPN& rpn);
+        RPN& operator=(const RPN& rpn);
         ~RPN();
         void calculate();
 };

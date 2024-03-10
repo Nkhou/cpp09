@@ -20,6 +20,8 @@ class BitcoinExchange
         std::map<std::string , float> in;
     public:
         BitcoinExchange();
+        BitcoinExchange(BitcoinExchange const &src);
+        BitcoinExchange &operator=(BitcoinExchange const &src);
         ~BitcoinExchange();
         void readFile(char *filename);
         void checkLine(std::string line);
