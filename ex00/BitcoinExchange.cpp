@@ -85,7 +85,7 @@ int BitcoinExchange::checkValue(std::string value)
                 }
                 continue;
             }
-            if (value[i] == '-' && i == 0 && value.length() > 1)
+            if (value[i] == '+' && i == 0 && value.length() > 1)
                 continue;
             std::cout << "Error: bad input => " << value << std::endl;
             return 1;
@@ -125,7 +125,7 @@ float BitcoinExchange::getDate(std::string date)
     t_date date1;
     t_date date2;
     date1.year = std::stoi(date.substr(0, 4));
-    if (date1.year < 2011 || date1.year > 2021)
+    if (date1.year < 2009 || date1.year > 2022)
         return -1;
     date1.month = std::stoi(date.substr(5, 2));
     if (date1.month < 1 || date1.month > 12)
@@ -175,15 +175,32 @@ void BitcoinExchange::readFile(char *filename)
     {
         size_t pos = 0;
         pos = line.find("|", pos);
+        if (strtrim(line).length() == 0 || strtrim(line) == "\n")
+        {
+            i++;
+            continue;
+        }
         int d = checkDate(strtrim(line.substr(0, pos)));
+        if (d)
+        {
+            i++;
+            continue;
+        }
+        sum = getDate(strtrim(line.substr(0, pos)));
+        if (sum == -1 && !d)
+        {
+            std::cout << "Error: date not found => " << strtrim(line.substr(0, pos)) << std::endl;
+            i++;
+            continue;
+        }
         if (pos == std::string::npos || pos == 0)
         {
             std::cout << "Error: bad input => " << line << std::endl;
             i++;
             continue;
         }
-        int c = checkValue(strtrim(line.substr(pos + 1, line.length()))); // check value
-        sum = getDate(strtrim(line.substr(0, pos)));
+        int c;
+            c = checkValue(strtrim(line.substr(pos + 1, line.length())));
         if (sum == -1 && !d)
         {
             std::cout << "Error: bad input => " << line << std::endl;
@@ -193,6 +210,12 @@ void BitcoinExchange::readFile(char *filename)
         else if (!c)
         {
             float sum1 = std::stof(strtrim(line.substr(pos + 1, line.length())));
+            if (sum1 >  1000)
+            {
+                std::cout << "Error: bad input => " << strtrim(line.substr(pos + 1, line.length())) << std::endl;
+                i++;
+                continue;
+            }
             std::cout << strtrim(line.substr(0, pos)) << " => " << strtrim(line.substr(pos + 1, line.length())) << " = " << sum * sum1 << std::endl;
         } 
         i++;
