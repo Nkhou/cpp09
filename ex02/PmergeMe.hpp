@@ -39,9 +39,12 @@ class PmergeMe {
         int jacobsthal(int n);
         void sortVector(std::vector<unsigned int> &d);
         void sortDeque(std::deque<unsigned int> &d);
+        void sortf(std::vector<std::pair<unsigned int, unsigned int> >::iterator &it);
+        void sortfD(std::deque<std::pair<unsigned int, unsigned int> >::iterator &it);
         template <typename T>
         void storIndouble(T &d);
         template <typename T>
         void bainarySearch(T &d2, T &d);
+        bool checkFirst();
 };
 #endif

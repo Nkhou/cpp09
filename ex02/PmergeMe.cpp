@@ -135,14 +135,62 @@ void PmergeMe::sortPairsD()
         }
     }
 }
+
+void PmergeMe::sortf(std::vector<std::pair<unsigned int, unsigned int> >::iterator &it)
+{
+    std::vector<std::pair<unsigned int, unsigned int> >::iterator it2 = it;
+    it2++;
+    if (it2 == args.end())
+    {
+        return;
+    }
+    if (it != args.end())
+    {
+        if (it2->first < it->first)
+        {
+            std::swap(*it, *it2);
+            it++;
+        }
+        else
+        {
+            it++;
+        }
+        sortf(it);
+    }
+}
+void PmergeMe::sortfD(std::deque<std::pair<unsigned int, unsigned int> >::iterator &it)
+{
+    std::deque<std::pair<unsigned int, unsigned int> >::iterator it2 = it;
+    it2++;
+    if (it2 == files.end())
+    {
+        return;
+    }
+    if (it != files.end())
+    {
+        if (it2->first < it->first)
+        {
+            std::swap(*it, *it2);
+            it++;
+        }
+        else
+        {
+            it++;
+        }
+        sortfD(it);
+    }
+}
+
 void PmergeMe::sortFirstPair()
 {
-    std::sort(args.begin(), args.end());
-    // printargs();
+    std::vector<std::pair<unsigned int, unsigned int> >::iterator it = args.begin();
+    sortf(it);
 }
+
 void PmergeMe::sortFirstPairD()
 {
-    std::sort(files.begin(), files.end());
+    std::deque<std::pair<unsigned int, unsigned int> >::iterator it = files.begin();
+    sortfD(it);
 }
 template <typename T>
 void PmergeMe::bainarySearch(T &d2, T &d)
